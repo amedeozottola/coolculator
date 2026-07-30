@@ -28,7 +28,22 @@ Utilizzo tipico: tecnico sul tetto/balcone accanto all'unità esterna, con grupp
 - Architettura dati pensata per estendere facilmente in futuro: R32, R22, R134a, R290. Ogni refrigerante è un modulo dati indipendente (curva di saturazione + range target consigliati), selezionabile da un menu a tendina. Non implementare gli altri nella v1, ma non hardcodare R410A in modo che aggiungerne altri richieda di riscrivere la logica.
 
 ### Dati necessari per la curva P/T dell'R410A
-Tabella di saturazione pressione↔temperatura (valori assoluti o relativi, va scelta una convenzione e documentata nel codice), copertura indicativa da -40°C a +60°C, con interpolazione lineare tra i punti tabulati per pressioni intermedie. La tabella va incorporata come dato statico nell'app (JSON o array), non recuperata da API esterne.
+Tabella di saturazione pressione↔temperatura, copertura indicativa da -40°C a +60°C, con interpolazione lineare tra i punti tabulati per pressioni intermedie. La tabella va incorporata come dato statico nell'app (JSON o array), non recuperata da API esterne.
+
+**Convenzione pressione: relativa/gauge**, coerente con i gruppi manometrici usati sul campo (letture a 0 bar/psi ad atmosfera, es. Testo, Refco, Yellow Jacket, Fieldpiece — verificato con test pratico: manometro scollegato e aperto all'aria legge 0). La tabella P/T incorporata nel codice deve quindi contenere valori di pressione **gauge**, non assoluti. Se in futuro serve un valore assoluto per calcoli intermedi, sottrarre/aggiungere 1,013 bar in un punto unico e documentato del codice, non sparso nella logica.
+
+Valori di riferimento verificati (fonte: tabelle di saturazione R410A incrociate da due fonti indipendenti, luglio 2026):
+
+| °C | bar gauge |
+|---|---|
+| -4 | ~6.02 |
+| -3 | ~6.26 |
+| -2 | ~6.50 |
+| 0 | ~7.00 |
+| 2 | ~7.52 |
+| 6 | ~8.63 |
+
+La tabella completa da -40°C a +60°C va ricostruita/verificata in fase di implementazione da una fonte tecnica completa (es. datasheet produttore refrigerante, norma EN, o PT chart HVAC affidabile), usando questi punti come cross-check di coerenza.
 
 ## 4. Funzionalità — v1 (MVP)
 
@@ -114,7 +129,8 @@ Suggerimento di ordine di lavoro per Claude Code:
 
 ## 8. Riferimenti di dominio (contesto raccolto durante l'analisi)
 
-- Caso reale di validazione: pressione bassa 7,5 bar (0,75 MPa), temperatura tubo gas 6°C → temperatura di evaporazione teorica a 7,5 bar ≈ -3°C → superheat calcolato ≈ 9°C, risultato nel range target (5-10°C indicativo per R410A in split residenziali).
+- Caso reale di validazione (corretto dopo verifica incrociata dei dati P/T, luglio 2026 — vedi anche §3): pressione bassa **8,5 bar gauge**, temperatura tubo gas 6°C → temperatura di evaporazione teorica a 8,5 bar gauge ≈ **2°C** → superheat calcolato ≈ **4°C**.
+  - Nota: la versione precedente di questo caso (7,5 bar → -3°C → superheat 9°C) usava una lettura di pressione non coerente con la convenzione gauge confermata per l'app (vedi §3) ed è stata corretta. Da riverificare comunque con una misura reale sul campo prima di usarla come test automatico definitivo.
 - Range target indicativi usati come riferimento iniziale (da validare/raffinare in fase di sviluppo, eventualmente rendendoli configurabili):
   - Superheat: 5-10°C
   - Subcooling: 8-12°C
