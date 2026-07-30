@@ -20,7 +20,7 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 ## Ordine di sviluppo consigliato (vedi anche ANALYSIS.md §7)
 
 - [x] 1. Scaffold progetto (Vite + React + Tailwind + plugin PWA) — fatto, `base: '/coolculator/'` impostato per GitHub Pages, icone generate da `assets/logo/icon-512.svg` in `public/icons/`, deploy automatico via `.github/workflows/deploy.yml`.
-- [ ] 2. Modulo dati curva di saturazione P/T per R410A (struttura dati + funzione di interpolazione lineare tra i punti tabulati). Scrivere qualche test/verifica manuale con valori noti (es. 7,5 bar → circa -3°C).
+- [x] 2. Modulo dati curva di saturazione P/T per R410A — fatto: `src/lib/pt-curve.ts` (interpolazione generica, gauge) + `src/data/r410a.ts` (tabella da `docs/tabella_pt_gas.html`) + test in `src/lib/pt-curve.test.ts` (`npm run test`), validati sul caso 7,5 bar → ~2°C.
 - [ ] 3. Form di input dati misurazione (vedi tabella campi in ANALYSIS.md §4.1), con conversione unità (bar/MPa/psi, °C/°F)
 - [ ] 4. Logica di calcolo: superheat, subcooling, controlli di coerenza (ANALYSIS.md §4.2 e §4.3)
 - [ ] 5. Componente gauge SVG (lancetta su arco con zone verde/giallo/rosso) — vedi ANALYSIS.md §4.4 per la logica delle zone
@@ -40,5 +40,7 @@ Tutte le pressioni gestite dall'app (input utente, tabella P/T interna) sono **r
 
 ## Dato di riferimento per validare i calcoli
 
-Caso reale usato per validare la logica a mano (vedi ANALYSIS.md §8, corretto dopo verifica dati P/T):
-pressione bassa 8,5 bar gauge + temperatura reale tubo gas 6°C → temperatura di evaporazione teorica ≈ 2°C → superheat ≈ 4°C. Usalo come test case per la funzione di calcolo del superheat (da riverificare con misura reale sul campo prima di considerarlo definitivo).
+Caso reale usato per validare la logica a mano (vedi ANALYSIS.md §8, corretto dopo verifica con tabella P/T ufficiale in `docs/tabella_pt_gas.html`):
+pressione bassa 7,5 bar gauge + temperatura reale tubo gas 6°C → temperatura di evaporazione teorica ≈ 2°C → superheat ≈ 4°C. Usalo come test case per la funzione di calcolo del superheat.
+
+La tabella P/T completa R410A (bar gauge, da -50°C a +64°C) è in ANALYSIS.md §8 ed è la fonte dati per il modulo `src/data/r410a.ts`.

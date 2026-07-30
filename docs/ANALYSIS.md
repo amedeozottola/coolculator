@@ -129,8 +129,70 @@ Suggerimento di ordine di lavoro per Claude Code:
 
 ## 8. Riferimenti di dominio (contesto raccolto durante l'analisi)
 
-- Caso reale di validazione (corretto dopo verifica incrociata dei dati P/T, luglio 2026 — vedi anche §3): pressione bassa **8,5 bar gauge**, temperatura tubo gas 6°C → temperatura di evaporazione teorica a 8,5 bar gauge ≈ **2°C** → superheat calcolato ≈ **4°C**.
-  - Nota: la versione precedente di questo caso (7,5 bar → -3°C → superheat 9°C) usava una lettura di pressione non coerente con la convenzione gauge confermata per l'app (vedi §3) ed è stata corretta. Da riverificare comunque con una misura reale sul campo prima di usarla come test automatico definitivo.
+- Caso reale di validazione (corretto dopo verifica con tabella P/T ufficiale, luglio 2026 — vedi anche §3): pressione bassa **7,5 bar gauge**, temperatura tubo gas 6°C → temperatura di evaporazione teorica a 7,5 bar gauge ≈ **2°C** (interpolando tra +2°C/7,49 bar e +3°C/7,76 bar sulla tabella di `tabella_pt_gas.html`) → superheat calcolato ≈ **4°C**.
+  - Nota: le versioni precedenti di questo caso (prima "7,5 bar → -3°C → superheat 9°C", poi corretta erroneamente in "8,5 bar → 2°C") sono state entrambe superate: il valore di pressione corretto è 7,5 bar (quello originale misurato sul campo), l'errore era solo nel calcolo della temperatura di evaporazione teorica associata.
+
+### Tabella P/T di riferimento (fonte: `tabella_pt_gas.html`, luglio 2026)
+
+Tabella ritenuta affidabile: incrociata con una fonte indipendente sui punti -4/0/+2/+6°C, scarto ≤0,05 bar. Valori in **bar gauge**. Copre R410A (usato per la tabella dati statica dell'app, v1) e R32 (tenuto come riferimento per un'eventuale v2, non implementato ora — vedi §5).
+
+| °C | R410A (bar) | R32 (bar) |
+|---|---|---|
+| -50 | 0,11 | 0,11 |
+| -45 | 0,42 | 0,41 |
+| -40 | 0,78 | 0,78 |
+| -36 | 1,09 | 1,10 |
+| -35 | 1,22 | 1,22 |
+| -32 | 1,46 | 1,50 |
+| -30 | 1,74 | 1,74 |
+| -28 | 1,92 | 2,00 |
+| -25 | 2,34 | 2,35 |
+| -24 | 2,42 | 2,50 |
+| -20 | 3,05 | 3,06 |
+| -16 | 3,62 | 3,80 |
+| -15 | 3,83 | 3,88 |
+| -12 | 4,33 | 4,40 |
+| -10 | 4,79 | 4,83 |
+| -8 | 5,12 | 5,15 |
+| -5 | 5,86 | 5,91 |
+| -4 | 5,99 | 6,06 |
+| 0 | 7,06 | 7,14 |
+| +1 | 7,23 | 7,38 |
+| +2 | 7,49 | 7,65 |
+| +3 | 7,76 | 7,93 |
+| +4 | 8,02 | 8,15 |
+| +5 | 8,42 | 8,52 |
+| +6 | 8,61 | 8,80 |
+| +7 | 8,90 | 9,10 |
+| +8 | 9,19 | 9,30 |
+| +9 | 9,52 | 9,73 |
+| +10 | 9,95 | 10,08 |
+| +12 | 10,46 | 10,80 |
+| +15 | 11,65 | 11,82 |
+| +16 | 11,86 | 12,10 |
+| +20 | 13,55 | 13,76 |
+| +24 | 15,02 | 15,30 |
+| +25 | 15,65 | 15,91 |
+| +28 | 16,81 | 17,15 |
+| +30 | 17,98 | 18,28 |
+| +32 | 18,75 | 19,20 |
+| +35 | 20,54 | 20,90 |
+| +36 | 20,84 | 21,50 |
+| +40 | 23,36 | 23,78 |
+| +41 | 23,77 | 24,38 |
+| +42 | 24,37 | 25,00 |
+| +43 | 24,98 | 25,63 |
+| +44 | 25,52 | 26,20 |
+| +45 | 26,45 | 26,94 |
+| +46 | 26,90 | 27,60 |
+| +47 | 27,56 | 28,28 |
+| +48 | 28,14 | 29,00 |
+| +49 | 28,92 | 29,68 |
+| +50 | 29,84 | 30,40 |
+| +52 | 30,96 | 31,90 |
+| +56 | 33,99 | 35,00 |
+| +60 | 37,24 | 38,40 |
+| +64 | 40,75 | 42,00 |
 - Range target indicativi usati come riferimento iniziale (da validare/raffinare in fase di sviluppo, eventualmente rendendoli configurabili):
   - Superheat: 5-10°C
   - Subcooling: 8-12°C
