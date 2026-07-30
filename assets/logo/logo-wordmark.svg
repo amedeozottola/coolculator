@@ -1,0 +1,42 @@
+<svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B3D5C"/>
+      <stop offset="100%" stop-color="#0E5C82"/>
+    </linearGradient>
+    <linearGradient id="dial2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EAF6FB"/>
+    </linearGradient>
+    <linearGradient id="needle2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B4A"/>
+      <stop offset="100%" stop-color="#E8432A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="260" rx="28" fill="#FFFFFF"/>
+
+  <!-- icon badge -->
+  <rect x="20" y="20" width="220" height="220" rx="44" fill="url(#bg2)"/>
+  <circle cx="130" cy="140" r="70" fill="url(#dial2)" stroke="#0B3D5C" stroke-width="5"/>
+  <path d="M 68 140 A 62 62 0 0 1 92 89" fill="none" stroke="#E8432A" stroke-width="10" stroke-linecap="round"/>
+  <path d="M 92 89 A 62 62 0 0 1 122 79" fill="none" stroke="#F2A93B" stroke-width="10" stroke-linecap="round"/>
+  <path d="M 122 79 A 62 62 0 0 1 138 79" fill="none" stroke="#3FA65B" stroke-width="10" stroke-linecap="round"/>
+  <path d="M 138 79 A 62 62 0 0 1 168 89" fill="none" stroke="#F2A93B" stroke-width="10" stroke-linecap="round"/>
+  <path d="M 168 89 A 62 62 0 0 1 192 140" fill="none" stroke="#E8432A" stroke-width="10" stroke-linecap="round"/>
+  <g transform="rotate(8 130 140)">
+    <path d="M 130 140 L 133 84 L 130 78 L 127 84 Z" fill="url(#needle2)"/>
+  </g>
+  <circle cx="130" cy="140" r="8" fill="#0B3D5C"/>
+  <circle cx="130" cy="140" r="3.5" fill="#FFFFFF"/>
+  <g transform="translate(186,62) scale(0.5)" stroke="#EAF6FB" stroke-width="7" stroke-linecap="round">
+    <line x1="0" y1="-26" x2="0" y2="26"/>
+    <line x1="-22.5" y1="-13" x2="22.5" y2="13"/>
+    <line x1="-22.5" y1="13" x2="22.5" y2="-13"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="270" y="155" font-family="Verdana, Arial, sans-serif" font-size="86" font-weight="bold" fill="#0B3D5C">Cool</text>
+  <text x="450" y="155" font-family="Verdana, Arial, sans-serif" font-size="86" font-weight="bold" fill="#E8432A">culator</text>
+  <text x="272" y="192" font-family="Verdana, Arial, sans-serif" font-size="24" fill="#5A7A8C">diagnosi carica refrigerante</text>
+</svg>
