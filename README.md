@@ -10,7 +10,18 @@ Refrigerante supportato in v1: **R410A**. Architettura pensata per estendere ad 
 
 ## Stato del progetto
 
-🚧 In fase di analisi/setup iniziale — non ancora in sviluppo.
+🚧 Scaffold iniziale pronto (Vite + React + TS + Tailwind + PWA). Logica applicativa non ancora implementata.
+
+## Sviluppo locale
+
+```bash
+npm install
+npm run dev      # dev server
+npm run build    # build di produzione in dist/
+npm run preview  # serve la build di produzione in locale
+```
+
+Il deploy su GitHub Pages è automatico via GitHub Actions ad ogni push su `main` (vedi `.github/workflows/deploy.yml`).
 
 ## Documentazione
 

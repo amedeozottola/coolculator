@@ -1,0 +1,58 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B3D5C"/>
+      <stop offset="100%" stop-color="#0E5C82"/>
+    </linearGradient>
+    <linearGradient id="dial" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EAF6FB"/>
+    </linearGradient>
+    <linearGradient id="needle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B4A"/>
+      <stop offset="100%" stop-color="#E8432A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- gauge dial -->
+  <circle cx="256" cy="270" r="150" fill="url(#dial)" stroke="#0B3D5C" stroke-width="8"/>
+
+  <!-- colored arc zones -->
+  <path d="M 130 270 A 126 126 0 0 1 175 165" fill="none" stroke="#E8432A" stroke-width="20" stroke-linecap="round"/>
+  <path d="M 175 165 A 126 126 0 0 1 245 146" fill="none" stroke="#F2A93B" stroke-width="20" stroke-linecap="round"/>
+  <path d="M 245 146 A 126 126 0 0 1 267 146" fill="none" stroke="#3FA65B" stroke-width="20" stroke-linecap="round"/>
+  <path d="M 267 146 A 126 126 0 0 1 337 165" fill="none" stroke="#F2A93B" stroke-width="20" stroke-linecap="round"/>
+  <path d="M 337 165 A 126 126 0 0 1 382 270" fill="none" stroke="#E8432A" stroke-width="20" stroke-linecap="round"/>
+
+  <!-- tick marks -->
+  <g stroke="#0B3D5C" stroke-width="4">
+    <line x1="256" y1="150" x2="256" y2="165"/>
+    <line x1="180" y1="175" x2="190" y2="185"/>
+    <line x1="332" y1="175" x2="322" y2="185"/>
+    <line x1="140" y1="270" x2="155" y2="270"/>
+    <line x1="372" y1="270" x2="357" y2="270"/>
+  </g>
+
+  <!-- needle pointing to green zone (slightly right of center, playful) -->
+  <g transform="rotate(8 256 270)">
+    <path d="M 256 270 L 262 160 L 256 148 L 250 160 Z" fill="url(#needle)"/>
+  </g>
+  <circle cx="256" cy="270" r="16" fill="#0B3D5C"/>
+  <circle cx="256" cy="270" r="7" fill="#FFFFFF"/>
+
+  <!-- snowflake accent, top right, "cool" touch -->
+  <g transform="translate(370,120) scale(0.9)" stroke="#EAF6FB" stroke-width="6" stroke-linecap="round">
+    <line x1="0" y1="-26" x2="0" y2="26"/>
+    <line x1="-22.5" y1="-13" x2="22.5" y2="13"/>
+    <line x1="-22.5" y1="13" x2="22.5" y2="-13"/>
+    <line x1="0" y1="-26" x2="-8" y2="-16"/>
+    <line x1="0" y1="-26" x2="8" y2="-16"/>
+    <line x1="0" y1="26" x2="-8" y2="16"/>
+    <line x1="0" y1="26" x2="8" y2="16"/>
+  </g>
+
+  <!-- base plate -->
+  <rect x="196" y="410" width="120" height="24" rx="12" fill="#EAF6FB" opacity="0.9"/>
+</svg>

@@ -19,7 +19,7 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 
 ## Ordine di sviluppo consigliato (vedi anche ANALYSIS.md §7)
 
-- [ ] 1. Scaffold progetto (Vite + React + Tailwind + plugin PWA)
+- [x] 1. Scaffold progetto (Vite + React + Tailwind + plugin PWA) — fatto, `base: '/coolculator/'` impostato per GitHub Pages, icone generate da `assets/logo/icon-512.svg` in `public/icons/`, deploy automatico via `.github/workflows/deploy.yml`.
 - [ ] 2. Modulo dati curva di saturazione P/T per R410A (struttura dati + funzione di interpolazione lineare tra i punti tabulati). Scrivere qualche test/verifica manuale con valori noti (es. 7,5 bar → circa -3°C).
 - [ ] 3. Form di input dati misurazione (vedi tabella campi in ANALYSIS.md §4.1), con conversione unità (bar/MPa/psi, °C/°F)
 - [ ] 4. Logica di calcolo: superheat, subcooling, controlli di coerenza (ANALYSIS.md §4.2 e §4.3)
@@ -34,7 +34,11 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 - Non aggiungere un backend o chiamate di rete per i calcoli: tutto deve girare offline nel browser.
 - Non implementare le funzionalità elencate in ANALYSIS.md §5 (v2) — sono solo annotate per riferimento futuro.
 
+## Convenzione pressione
+
+Tutte le pressioni gestite dall'app (input utente, tabella P/T interna) sono **relative/gauge** (coerente con i gruppi manometrici da campo, che leggono 0 a pressione atmosferica). Non assolute. Vedi ANALYSIS.md §3.
+
 ## Dato di riferimento per validare i calcoli
 
-Caso reale usato per validare la logica a mano (vedi ANALYSIS.md §8):
-pressione bassa 7,5 bar (0,75 MPa) + temperatura reale tubo gas 6°C → temperatura di evaporazione teorica ≈ -3°C → superheat ≈ 9°C (nel range target 5-10°C). Usalo come test case per la funzione di calcolo del superheat.
+Caso reale usato per validare la logica a mano (vedi ANALYSIS.md §8, corretto dopo verifica dati P/T):
+pressione bassa 8,5 bar gauge + temperatura reale tubo gas 6°C → temperatura di evaporazione teorica ≈ 2°C → superheat ≈ 4°C. Usalo come test case per la funzione di calcolo del superheat (da riverificare con misura reale sul campo prima di considerarlo definitivo).
