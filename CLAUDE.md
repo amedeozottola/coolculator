@@ -31,7 +31,7 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 
 ## Cosa NON fare nella v1
 
-- Non implementare altri refrigeranti oltre R410A (ma strutturare il codice in modo che aggiungerli sia semplice — vedi ANALYSIS.md §3).
+- Non implementare altri refrigeranti oltre R410A e R32 (R22, R134a, R290 restano fuori scope — vedi ANALYSIS.md §3).
 - Non aggiungere un backend o chiamate di rete per i calcoli: tutto deve girare offline nel browser.
 - Non implementare le funzionalità elencate in ANALYSIS.md §5 (v2) — sono solo annotate per riferimento futuro.
 - Non implementare storico misurazioni/anagrafica impianti: rimandato a quando ci sarà un backend (vedi ANALYSIS.md §4.5).

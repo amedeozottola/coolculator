@@ -25,7 +25,15 @@ Utilizzo tipico: tecnico sul tetto/balcone accanto all'unità esterna, con grupp
 ## 3. Refrigeranti supportati
 
 - **R410A** — refrigerante primario, da implementare per primo con la curva P/T completa.
-- Architettura dati pensata per estendere facilmente in futuro: R32, R22, R134a, R290. Ogni refrigerante è un modulo dati indipendente (curva di saturazione + range target consigliati), selezionabile da un menu a tendina. Non implementare gli altri nella v1, ma non hardcodare R410A in modo che aggiungerne altri richieda di riscrivere la logica.
+- Architettura dati pensata per estendere facilmente in futuro: R32, R22, R134a, R290. Ogni refrigerante è un modulo dati indipendente (curva di saturazione + range target consigliati), selezionabile da un menu a tendina.
+- **Aggiornamento luglio 2026**: R32 implementato in v1 su richiesta esplicita dell'utente (avevamo già la tabella P/T verificata). R22, R134a, R290 restano fuori scope, non implementarli.
+
+### Range target R32 — attendibilità limitata
+
+A differenza dei range R410A (§8, validati anche con un caso reale sul campo), i range target di R32 sono presi da fonti web secondarie (blog tecnici HVAC, non manuali di produttore — i PDF di manuali Daikin/Goodman trovati non erano leggibili con gli strumenti disponibili). Da verificare con una fonte primaria prima di un uso operativo reale.
+
+- **Superheat**: 5-10°C — riusato lo stesso range di R410A, nessuna fonte ha indicato un valore R32-specifico diverso.
+- **Subcooling**: 5,6-6,7°C (da 10-12°F a 85°F ambiente, fonti secondarie convergenti) — **sensibilmente più basso** delle 8-12°C di R410A. Plausibile fisicamente (R32 ha proprietà termodinamiche diverse, pressioni operative più alte), ma non confermato da manuale di produttore.
 
 ### Dati necessari per la curva P/T dell'R410A
 Tabella di saturazione pressione↔temperatura, copertura indicativa da -40°C a +60°C, con interpolazione lineare tra i punti tabulati per pressioni intermedie. La tabella va incorporata come dato statico nell'app (JSON o array), non recuperata da API esterne.
@@ -137,7 +145,7 @@ Suggerimento di ordine di lavoro per Claude Code:
 
 ### Tabella P/T di riferimento (fonte: `tabella_pt_gas.html`, luglio 2026)
 
-Tabella ritenuta affidabile: incrociata con una fonte indipendente sui punti -4/0/+2/+6°C, scarto ≤0,05 bar. Valori in **bar gauge**. Copre R410A (usato per la tabella dati statica dell'app, v1) e R32 (tenuto come riferimento per un'eventuale v2, non implementato ora — vedi §5).
+Tabella ritenuta affidabile: incrociata con una fonte indipendente sui punti -4/0/+2/+6°C, scarto ≤0,05 bar. Valori in **bar gauge**. Copre R410A e R32, entrambi implementati nella v1 (vedi §3).
 
 | °C | R410A (bar) | R32 (bar) |
 |---|---|---|

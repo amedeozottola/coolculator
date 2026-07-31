@@ -10,7 +10,7 @@ import {
   targetLowPressureRangeBarGauge,
 } from './lib/charge-estimate'
 import { TemperatureOutOfRangeError } from './lib/pt-curve'
-import { R410A_PT_CURVE, R410A_SUPERHEAT_TARGET, R410A_SUBCOOLING_TARGET } from './data/r410a'
+import { REFRIGERANTS } from './data/refrigerants'
 import type { MeasurementInput } from './types/measurement'
 
 function formatC(value: number | undefined): string {
@@ -19,14 +19,15 @@ function formatC(value: number | undefined): string {
 
 function superheatGaugeProps(result: DiagnosticsResult): GaugeProps | null {
   if (result.superheatC === undefined) return null
-  const judgment = judgeCharge(result.superheatC, R410A_SUPERHEAT_TARGET, true)
+  const refrigerant = REFRIGERANTS[result.refrigerant]
+  const judgment = judgeCharge(result.superheatC, refrigerant.superheatTarget, true)
 
   let targetPressureRange: GaugeProps['targetPressureRange']
   try {
     const [minBar, maxBar] = targetLowPressureRangeBarGauge(
-      R410A_PT_CURVE,
+      refrigerant.curve,
       result.gasLineTempC,
-      R410A_SUPERHEAT_TARGET,
+      refrigerant.superheatTarget,
     )
     targetPressureRange = { label: 'Pressione bassa target', minBar, maxBar }
   } catch (err) {
@@ -37,7 +38,7 @@ function superheatGaugeProps(result: DiagnosticsResult): GaugeProps | null {
   return {
     label: 'Superheat',
     valueC: result.superheatC,
-    target: R410A_SUPERHEAT_TARGET,
+    target: refrigerant.superheatTarget,
     highMeansUndercharged: true,
     judgment,
     adjustmentEstimate: estimateSuperheatChargeAdjustment(judgment.offsetFromCenterC),
@@ -47,14 +48,15 @@ function superheatGaugeProps(result: DiagnosticsResult): GaugeProps | null {
 
 function subcoolingGaugeProps(result: DiagnosticsResult): GaugeProps | null {
   if (result.subcoolingC === undefined || result.liquidLineTempC === undefined) return null
-  const judgment = judgeCharge(result.subcoolingC, R410A_SUBCOOLING_TARGET, false)
+  const refrigerant = REFRIGERANTS[result.refrigerant]
+  const judgment = judgeCharge(result.subcoolingC, refrigerant.subcoolingTarget, false)
 
   let targetPressureRange: GaugeProps['targetPressureRange']
   try {
     const [minBar, maxBar] = targetHighPressureRangeBarGauge(
-      R410A_PT_CURVE,
+      refrigerant.curve,
       result.liquidLineTempC,
-      R410A_SUBCOOLING_TARGET,
+      refrigerant.subcoolingTarget,
     )
     targetPressureRange = { label: 'Pressione alta target', minBar, maxBar }
   } catch (err) {
@@ -64,7 +66,7 @@ function subcoolingGaugeProps(result: DiagnosticsResult): GaugeProps | null {
   return {
     label: 'Subcooling',
     valueC: result.subcoolingC,
-    target: R410A_SUBCOOLING_TARGET,
+    target: refrigerant.subcoolingTarget,
     highMeansUndercharged: false,
     judgment,
     adjustmentEstimate: estimateSubcoolingChargeAdjustment(judgment.offsetFromCenterC),
@@ -132,7 +134,7 @@ function App() {
   const [result, setResult] = useState<DiagnosticsResult | null>(null)
 
   function handleSubmit(input: MeasurementInput) {
-    setResult(computeDiagnostics(input, R410A_PT_CURVE))
+    setResult(computeDiagnostics(input, REFRIGERANTS[input.refrigerant].curve))
   }
 
   return (
