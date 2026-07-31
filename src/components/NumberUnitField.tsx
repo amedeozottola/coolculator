@@ -40,6 +40,10 @@ export function NumberUnitField<TUnit extends string>({
           step="any"
           value={value}
           onChange={(e) => onValueChange(e.target.value)}
+          // Chrome incrementa/decrementa il valore quando si scorre con rotellina/trackpad
+          // sopra un input number attivo: su un form lungo capita per sbaglio scorrendo la
+          // pagina. Togliere il focus allo scroll fa sì che lo scroll muova solo la pagina.
+          onWheel={(e) => e.currentTarget.blur()}
           required={required}
           className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         />
