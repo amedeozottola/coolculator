@@ -24,7 +24,8 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 - [x] 3. Form di input dati misurazione — fatto: `src/components/MeasurementForm.tsx`, campi raggruppati per obbligatorietà, conversione unità in `src/lib/units.ts`.
 - [x] 4. Logica di calcolo: superheat, subcooling, controlli di coerenza — fatto: `src/lib/diagnostics.ts` + test in `src/lib/diagnostics.test.ts`, collegato al form in `App.tsx`.
 - [x] 5. Componente gauge SVG — fatto: `src/lib/charge-verdict.ts` (giudizio zone + range target in `src/data/r410a.ts`) + `src/components/Gauge.tsx`, due gauge affiancati (superheat/subcooling) in `App.tsx` come da ANALYSIS.md §4.4.
-- [ ] 6. Storico misurazioni con IndexedDB (salvataggio locale, nessun account) — ANALYSIS.md §4.5
+- [x] 5b. Stima grammi da aggiungere/togliere + target di pressione (ANALYSIS.md §4.2) — fatto: `src/lib/charge-estimate.ts`, mostrato nel gauge solo quando la zona non è "correct". Fattore g/°C dichiarato placeholder/non validato, da tarare con l'uso reale.
+- [ ] ~~6. Storico misurazioni con IndexedDB~~ — RIMANDATO (luglio 2026): verrà fatto insieme all'anagrafica impianti quando l'app avrà un backend, vedi ANALYSIS.md §4.5.
 - [ ] 7. Modalità guidata "step-by-step ricarica" con timer di stabilizzazione — ANALYSIS.md §4.6
 - [ ] 8. Rifinitura: manifest PWA completo, test installabilità, test offline, dark mode, touch target grandi
 
@@ -33,6 +34,7 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 - Non implementare altri refrigeranti oltre R410A (ma strutturare il codice in modo che aggiungerli sia semplice — vedi ANALYSIS.md §3).
 - Non aggiungere un backend o chiamate di rete per i calcoli: tutto deve girare offline nel browser.
 - Non implementare le funzionalità elencate in ANALYSIS.md §5 (v2) — sono solo annotate per riferimento futuro.
+- Non implementare storico misurazioni/anagrafica impianti: rimandato a quando ci sarà un backend (vedi ANALYSIS.md §4.5).
 
 ## Convenzione pressione
 

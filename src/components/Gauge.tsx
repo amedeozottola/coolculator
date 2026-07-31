@@ -1,5 +1,6 @@
 import type { ChargeJudgment, ChargeZone, TargetRange } from '../lib/charge-verdict'
 import { zoneBoundaries } from '../lib/charge-verdict'
+import type { ChargeAdjustmentEstimate } from '../lib/charge-estimate'
 
 const ZONE_COLORS: Record<ChargeZone, string> = {
   undercharged: '#E8432A',
@@ -31,15 +32,33 @@ function arcPath(fromAngle: number, toAngle: number, radius: number): string {
   return `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 1 ${end.x} ${end.y}`
 }
 
+export interface TargetPressureRange {
+  label: string
+  minBar: number
+  maxBar: number
+}
+
 export interface GaugeProps {
   label: string
   valueC: number
   target: TargetRange
   highMeansUndercharged: boolean
   judgment: ChargeJudgment
+  /** Stima grammi da aggiungere/togliere — mostrata solo se la zona non è "correct". */
+  adjustmentEstimate?: ChargeAdjustmentEstimate
+  /** Range di pressione da tenere d'occhio sul manometro durante la ricarica — mostrato solo se la zona non è "correct". */
+  targetPressureRange?: TargetPressureRange
 }
 
-export function Gauge({ label, valueC, target, highMeansUndercharged, judgment }: GaugeProps) {
+export function Gauge({
+  label,
+  valueC,
+  target,
+  highMeansUndercharged,
+  judgment,
+  adjustmentEstimate,
+  targetPressureRange,
+}: GaugeProps) {
   const { gaugeMinC, gaugeMaxC } = judgment
   const boundaries = zoneBoundaries(target, highMeansUndercharged)
   const needleAngle = valueToAngle(valueC, gaugeMinC, gaugeMaxC)
@@ -79,6 +98,29 @@ export function Gauge({ label, valueC, target, highMeansUndercharged, judgment }
         {judgment.offsetFromCenterC.toFixed(1)}°C
       </p>
       <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{judgment.label}</p>
+
+      {judgment.zone !== 'correct' && (adjustmentEstimate || targetPressureRange) && (
+        <div className="mt-1 flex flex-col items-center gap-1 rounded-md bg-sky-50 px-3 py-2 text-center text-xs text-sky-900 dark:bg-sky-950 dark:text-sky-200">
+          {adjustmentEstimate && (
+            <p>
+              Stima di massima:{' '}
+              <strong>
+                {adjustmentEstimate.direction === 'add' ? 'aggiungi' : 'togli'} ~
+                {adjustmentEstimate.grams} g
+              </strong>{' '}
+              — verifica sempre con step incrementali e ricalcolo.
+            </p>
+          )}
+          {targetPressureRange && (
+            <p>
+              {targetPressureRange.label}: punta a{' '}
+              <strong>
+                {targetPressureRange.minBar.toFixed(1)}–{targetPressureRange.maxBar.toFixed(1)} bar
+              </strong>
+            </p>
+          )}
+        </div>
+      )}
     </div>
   )
 }

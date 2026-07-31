@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import { MeasurementForm } from './components/MeasurementForm'
-import { Gauge } from './components/Gauge'
+import { Gauge, type GaugeProps } from './components/Gauge'
 import { computeDiagnostics, type DiagnosticsResult } from './lib/diagnostics'
 import { judgeCharge } from './lib/charge-verdict'
+import {
+  estimateSubcoolingChargeAdjustment,
+  estimateSuperheatChargeAdjustment,
+  targetHighPressureRangeBarGauge,
+  targetLowPressureRangeBarGauge,
+} from './lib/charge-estimate'
+import { TemperatureOutOfRangeError } from './lib/pt-curve'
 import { R410A_PT_CURVE, R410A_SUPERHEAT_TARGET, R410A_SUBCOOLING_TARGET } from './data/r410a'
 import type { MeasurementInput } from './types/measurement'
 
@@ -10,31 +17,71 @@ function formatC(value: number | undefined): string {
   return value === undefined ? '—' : `${value.toFixed(1)}°C`
 }
 
+function superheatGaugeProps(result: DiagnosticsResult): GaugeProps | null {
+  if (result.superheatC === undefined) return null
+  const judgment = judgeCharge(result.superheatC, R410A_SUPERHEAT_TARGET, true)
+
+  let targetPressureRange: GaugeProps['targetPressureRange']
+  try {
+    const [minBar, maxBar] = targetLowPressureRangeBarGauge(
+      R410A_PT_CURVE,
+      result.gasLineTempC,
+      R410A_SUPERHEAT_TARGET,
+    )
+    targetPressureRange = { label: 'Pressione bassa target', minBar, maxBar }
+  } catch (err) {
+    if (!(err instanceof TemperatureOutOfRangeError)) throw err
+    // Target fuori dalla curva P/T (caso limite): mostriamo comunque il gauge, solo senza il target di pressione.
+  }
+
+  return {
+    label: 'Superheat',
+    valueC: result.superheatC,
+    target: R410A_SUPERHEAT_TARGET,
+    highMeansUndercharged: true,
+    judgment,
+    adjustmentEstimate: estimateSuperheatChargeAdjustment(judgment.offsetFromCenterC),
+    targetPressureRange,
+  }
+}
+
+function subcoolingGaugeProps(result: DiagnosticsResult): GaugeProps | null {
+  if (result.subcoolingC === undefined || result.liquidLineTempC === undefined) return null
+  const judgment = judgeCharge(result.subcoolingC, R410A_SUBCOOLING_TARGET, false)
+
+  let targetPressureRange: GaugeProps['targetPressureRange']
+  try {
+    const [minBar, maxBar] = targetHighPressureRangeBarGauge(
+      R410A_PT_CURVE,
+      result.liquidLineTempC,
+      R410A_SUBCOOLING_TARGET,
+    )
+    targetPressureRange = { label: 'Pressione alta target', minBar, maxBar }
+  } catch (err) {
+    if (!(err instanceof TemperatureOutOfRangeError)) throw err
+  }
+
+  return {
+    label: 'Subcooling',
+    valueC: result.subcoolingC,
+    target: R410A_SUBCOOLING_TARGET,
+    highMeansUndercharged: false,
+    judgment,
+    adjustmentEstimate: estimateSubcoolingChargeAdjustment(judgment.offsetFromCenterC),
+    targetPressureRange,
+  }
+}
+
 function ResultsPanel({ result }: { result: DiagnosticsResult }) {
-  const hasGauge = result.superheatC !== undefined || result.subcoolingC !== undefined
+  const superheatGauge = superheatGaugeProps(result)
+  const subcoolingGauge = subcoolingGaugeProps(result)
 
   return (
     <div className="flex w-full max-w-md flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800">
-      {hasGauge && (
+      {(superheatGauge || subcoolingGauge) && (
         <div className="flex flex-wrap justify-center gap-6 border-b border-slate-200 pb-4 dark:border-slate-700">
-          {result.superheatC !== undefined && (
-            <Gauge
-              label="Superheat"
-              valueC={result.superheatC}
-              target={R410A_SUPERHEAT_TARGET}
-              highMeansUndercharged
-              judgment={judgeCharge(result.superheatC, R410A_SUPERHEAT_TARGET, true)}
-            />
-          )}
-          {result.subcoolingC !== undefined && (
-            <Gauge
-              label="Subcooling"
-              valueC={result.subcoolingC}
-              target={R410A_SUBCOOLING_TARGET}
-              highMeansUndercharged={false}
-              judgment={judgeCharge(result.subcoolingC, R410A_SUBCOOLING_TARGET, false)}
-            />
-          )}
+          {superheatGauge && <Gauge {...superheatGauge} />}
+          {subcoolingGauge && <Gauge {...subcoolingGauge} />}
         </div>
       )}
 

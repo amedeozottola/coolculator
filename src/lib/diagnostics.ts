@@ -13,6 +13,10 @@ const LIQUID_LINE_VS_OUTDOOR_MAX_GAP_C = 15
 const MIN_PLAUSIBLE_GAS_LIQUID_DIFF_C = 3
 
 export interface DiagnosticsResult {
+  /** Temperatura reale tubo gas in °C, sempre presente (campo obbligatorio). Utile a valle per calcolare un target di pressione. */
+  gasLineTempC: number
+  /** Temperatura reale tubo liquido in °C, se fornita. */
+  liquidLineTempC?: number
   evaporationTempC?: number
   superheatC?: number
   condensationTempC?: number
@@ -106,5 +110,14 @@ export function computeDiagnostics(input: MeasurementInput, curve: PtCurve): Dia
     }
   }
 
-  return { evaporationTempC, superheatC, condensationTempC, subcoolingC, airDeltaTC, warnings }
+  return {
+    gasLineTempC,
+    liquidLineTempC,
+    evaporationTempC,
+    superheatC,
+    condensationTempC,
+    subcoolingC,
+    airDeltaTC,
+    warnings,
+  }
 }

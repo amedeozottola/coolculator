@@ -69,7 +69,8 @@ Form con i seguenti campi (tutti con unità selezionabile dove ha senso):
 - **Temperatura di condensazione teorica** (se pressione alta presente) = lookup/interpolazione sulla curva P/T da pressione alta.
 - **Subcooling** (se dati disponibili) = temperatura di condensazione teorica − temperatura reale tubo liquido.
 - **Delta T aria** (se dati disponibili) = temperatura ripresa − temperatura mandata. Target indicativo 8-10°C, mostrato come dato di supporto, non nel gauge principale.
-- **Stima indicativa grammi da aggiungere/togliere**: regola empirica basata sullo scostamento dal target (es. proporzionale ai °C fuori range), con disclaimer chiaro che è una stima orientativa e non un valore di precisione — va sempre verificata con step incrementali e ricalcolo.
+- **Stima indicativa grammi da aggiungere/togliere**: regola empirica basata sullo scostamento dal target (proporzionale ai °C fuori range), con disclaimer chiaro che è una stima orientativa e non un valore di precisione — va sempre verificata con step incrementali e ricalcolo. Implementata in `src/lib/charge-estimate.ts` (luglio 2026) con un fattore g/°C dichiarato esplicitamente come placeholder non validato su impianti reali, da tarare con l'uso sul campo. Aggiunto anche un target di pressione bassa/alta (bar) corrispondente al range target, più pratico da seguire sul manometro durante una ricarica incrementale rispetto a un target in °C.
+  - Nota di scope (luglio 2026): valutata e scartata per ora una regola alternativa basata sulla differenza tra temperatura tubo gas e tubo liquido, letta dall'utente da una fonte non specificata — non essendo chiaro se generalizzabile a qualsiasi impianto R410A o specifica di un produttore, si è preferito riusare lo scostamento superheat/subcooling già validato. Da rivalutare se emerge una fonte tecnica verificabile.
 
 ### 4.3 Controlli di coerenza automatici (avvisi, non blocchi)
 L'app deve segnalare — senza bloccare l'inserimento — pattern di dati sospetti, ad esempio:
@@ -89,9 +90,10 @@ Componente principale della UI: quadrante analogico (lancetta su arco, non barra
 - Numero grande sotto il gauge con lo scostamento in °C dal centro del range target
 - Se disponibili sia superheat che subcooling, mostrare due gauge affiancati (o selezionabili a tab), non mescolare i due giudizi in un solo numero
 
-### 4.5 Storico misurazioni
-- Ogni misurazione salvata localmente con data/ora, dati inseriti e risultato.
-- Possibilità di raggruppare misurazioni per "impianto" (nome libero, es. "Split camera - dual split esterno"), utile a chi segue più macchine.
+### 4.5 Storico misurazioni — RIMANDATO (decisione luglio 2026)
+Spostato fuori dalla v1: verrà implementato insieme a un'anagrafica impianti vera e propria (multi-impianto, storico misurazioni per impianto) quando l'app avrà un backend — l'attuale scope 100% client-side/IndexedDB non è più ritenuto il punto di arrivo per questa funzionalità. Restano valide le note originali come riferimento per quando si riprenderà il lavoro:
+- Ogni misurazione salvata con data/ora, dati inseriti e risultato.
+- Raggruppamento misurazioni per "impianto" (nome libero, es. "Split camera - dual split esterno").
 - Vista storico con possibilità di rivedere una misurazione precedente (utile per confrontare prima/dopo una ricarica a step).
 
 ### 4.6 Step-by-step ricarica guidata
