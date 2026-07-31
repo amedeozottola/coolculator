@@ -101,6 +101,7 @@ Modalità opzionale che replica il flusso "misura → aggiungi piccolo step → 
 - Indicazione "continua" / "fermati, sei nel target" ad ogni step
 
 ## 5. Funzionalità — possibili v2 (solo elencate, non progettare ora)
+- Guida consultabile in-app con immagini esplicative dei punti di misura (dove mettere la sonda su tubo gas/liquido, differenza aria in mandata/ripresa, ecc.), richiamabile da tooltip/icona "?" accanto ai campi del form. Nata da un'esigenza di chiarezza discussa durante lo sviluppo del form input (luglio 2026): la v1 avrà comunque etichette e micro-copy chiari nel form, le immagini sono un arricchimento rimandato.
 - Tabella P/T consultabile manualmente come fallback offline.
 - Checklist di sicurezza pre-intervento (verifica perdite, patentino F-Gas, DPI).
 - Esportazione/condivisione di un report PDF della misurazione.
