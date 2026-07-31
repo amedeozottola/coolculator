@@ -21,8 +21,8 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 
 - [x] 1. Scaffold progetto (Vite + React + Tailwind + plugin PWA) — fatto, `base: '/coolculator/'` impostato per GitHub Pages, icone generate da `assets/logo/icon-512.svg` in `public/icons/`, deploy automatico via `.github/workflows/deploy.yml`.
 - [x] 2. Modulo dati curva di saturazione P/T per R410A — fatto: `src/lib/pt-curve.ts` (interpolazione generica, gauge) + `src/data/r410a.ts` (tabella da `docs/tabella_pt_gas.html`) + test in `src/lib/pt-curve.test.ts` (`npm run test`), validati sul caso 7,5 bar → ~2°C.
-- [ ] 3. Form di input dati misurazione (vedi tabella campi in ANALYSIS.md §4.1), con conversione unità (bar/MPa/psi, °C/°F)
-- [ ] 4. Logica di calcolo: superheat, subcooling, controlli di coerenza (ANALYSIS.md §4.2 e §4.3)
+- [x] 3. Form di input dati misurazione — fatto: `src/components/MeasurementForm.tsx`, campi raggruppati per obbligatorietà, conversione unità in `src/lib/units.ts`.
+- [x] 4. Logica di calcolo: superheat, subcooling, controlli di coerenza — fatto: `src/lib/diagnostics.ts` + test in `src/lib/diagnostics.test.ts`, collegato al form in `App.tsx`.
 - [ ] 5. Componente gauge SVG (lancetta su arco con zone verde/giallo/rosso) — vedi ANALYSIS.md §4.4 per la logica delle zone
 - [ ] 6. Storico misurazioni con IndexedDB (salvataggio locale, nessun account) — ANALYSIS.md §4.5
 - [ ] 7. Modalità guidata "step-by-step ricarica" con timer di stabilizzazione — ANALYSIS.md §4.6
