@@ -5,6 +5,7 @@ import { NumberUnitField } from './NumberUnitField'
 
 const PRESSURE_UNITS: readonly PressureUnit[] = ['bar', 'MPa', 'psi']
 const TEMPERATURE_UNITS: readonly TemperatureUnit[] = ['C', 'F']
+const TEMPERATURE_UNIT_LABELS: Record<TemperatureUnit, string> = { C: '°C', F: '°F' }
 
 interface RawField<TUnit> {
   value: string
@@ -100,6 +101,7 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
           help="Sonda a contatto diretto sul rame, non sopra la guaina isolante."
           required
           units={TEMPERATURE_UNITS}
+          unitLabels={TEMPERATURE_UNIT_LABELS}
           value={form.gasLineTemp.value}
           unit={form.gasLineTemp.unit}
           onValueChange={(value) => updateField('gasLineTemp', { value })}
@@ -129,6 +131,7 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
           label="Temperatura reale tubo liquido"
           help="Sonda a contatto diretto sul rame, non sopra la guaina isolante."
           units={TEMPERATURE_UNITS}
+          unitLabels={TEMPERATURE_UNIT_LABELS}
           value={form.liquidLineTemp.value}
           unit={form.liquidLineTemp.unit}
           onValueChange={(value) => updateField('liquidLineTemp', { value })}
@@ -148,6 +151,7 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
           id="outdoorAirTemp"
           label="Temperatura aria esterna"
           units={TEMPERATURE_UNITS}
+          unitLabels={TEMPERATURE_UNIT_LABELS}
           value={form.outdoorAirTemp.value}
           unit={form.outdoorAirTemp.unit}
           onValueChange={(value) => updateField('outdoorAirTemp', { value })}
@@ -158,6 +162,7 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
           label="Temperatura aria interna / set termostato"
           help="La temperatura ambiente mostrata sul telecomando o display dello split."
           units={TEMPERATURE_UNITS}
+          unitLabels={TEMPERATURE_UNIT_LABELS}
           value={form.indoorAirTemp.value}
           unit={form.indoorAirTemp.unit}
           onValueChange={(value) => updateField('indoorAirTemp', { value })}
@@ -168,6 +173,7 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
           label="Temperatura aria in ripresa"
           help="L'aria che rientra nello split dall'ambiente (davanti alla griglia di aspirazione)."
           units={TEMPERATURE_UNITS}
+          unitLabels={TEMPERATURE_UNIT_LABELS}
           value={form.returnAirTemp.value}
           unit={form.returnAirTemp.unit}
           onValueChange={(value) => updateField('returnAirTemp', { value })}
@@ -178,6 +184,7 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
           label="Temperatura aria in mandata"
           help="L'aria che esce dallo split verso l'ambiente (davanti alle alette di mandata)."
           units={TEMPERATURE_UNITS}
+          unitLabels={TEMPERATURE_UNIT_LABELS}
           value={form.supplyAirTemp.value}
           unit={form.supplyAirTemp.unit}
           onValueChange={(value) => updateField('supplyAirTemp', { value })}
