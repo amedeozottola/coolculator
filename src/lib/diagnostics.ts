@@ -46,6 +46,12 @@ export function computeDiagnostics(input: MeasurementInput, curve: PtCurve): Dia
   let condensationTempC: number | undefined
   let subcoolingC: number | undefined
   let liquidLineTempC: number | undefined
+  if (Boolean(input.highPressure) !== Boolean(input.liquidLineTemp)) {
+    const missing = input.highPressure ? 'la temperatura reale tubo liquido' : 'la pressione alta'
+    warnings.push(
+      `Per calcolare il subcooling serve anche ${missing}: al momento il dato inserito per la linea liquido viene ignorato.`,
+    )
+  }
   if (input.highPressure && input.liquidLineTemp) {
     const highPressureBarGauge = pressureToBarGauge(input.highPressure.value, input.highPressure.unit)
     liquidLineTempC = temperatureToC(input.liquidLineTemp.value, input.liquidLineTemp.unit)

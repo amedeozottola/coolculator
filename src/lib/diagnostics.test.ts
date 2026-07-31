@@ -62,6 +62,29 @@ describe('computeDiagnostics — subcooling', () => {
     )
   })
 
+  it('warns when only the liquid line temperature is provided, without high pressure', () => {
+    const input: MeasurementInput = {
+      ...base,
+      liquidLineTemp: { value: 30, unit: 'C' },
+      outdoorAirTemp: { value: 35, unit: 'C' },
+      returnAirTemp: { value: 28, unit: 'C' },
+      supplyAirTemp: { value: 10, unit: 'C' },
+    }
+    const result = computeDiagnostics(input, R410A_PT_CURVE)
+    expect(result.subcoolingC).toBeUndefined()
+    expect(result.airDeltaTC).toBeCloseTo(18, 5)
+    expect(result.warnings.some((w) => w.includes('serve anche la pressione alta'))).toBe(true)
+  })
+
+  it('warns when only the high pressure is provided, without liquid line temperature', () => {
+    const input: MeasurementInput = { ...base, highPressure: { value: 29.84, unit: 'bar' } }
+    const result = computeDiagnostics(input, R410A_PT_CURVE)
+    expect(result.subcoolingC).toBeUndefined()
+    expect(
+      result.warnings.some((w) => w.includes('serve anche la temperatura reale tubo liquido')),
+    ).toBe(true)
+  })
+
   it('warns when the liquid line temperature is far below the outdoor air temperature', () => {
     const input: MeasurementInput = {
       ...base,
