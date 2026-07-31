@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { MeasurementForm } from './components/MeasurementForm'
+import { Gauge } from './components/Gauge'
 import { computeDiagnostics, type DiagnosticsResult } from './lib/diagnostics'
-import { R410A_PT_CURVE } from './data/r410a'
+import { judgeCharge } from './lib/charge-verdict'
+import { R410A_PT_CURVE, R410A_SUPERHEAT_TARGET, R410A_SUBCOOLING_TARGET } from './data/r410a'
 import type { MeasurementInput } from './types/measurement'
 
 function formatC(value: number | undefined): string {
@@ -9,14 +11,39 @@ function formatC(value: number | undefined): string {
 }
 
 function ResultsPanel({ result }: { result: DiagnosticsResult }) {
+  const hasGauge = result.superheatC !== undefined || result.subcoolingC !== undefined
+
   return (
     <div className="flex w-full max-w-md flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800">
+      {hasGauge && (
+        <div className="flex flex-wrap justify-center gap-6 border-b border-slate-200 pb-4 dark:border-slate-700">
+          {result.superheatC !== undefined && (
+            <Gauge
+              label="Superheat"
+              valueC={result.superheatC}
+              target={R410A_SUPERHEAT_TARGET}
+              highMeansUndercharged
+              judgment={judgeCharge(result.superheatC, R410A_SUPERHEAT_TARGET, true)}
+            />
+          )}
+          {result.subcoolingC !== undefined && (
+            <Gauge
+              label="Subcooling"
+              valueC={result.subcoolingC}
+              target={R410A_SUBCOOLING_TARGET}
+              highMeansUndercharged={false}
+              judgment={judgeCharge(result.subcoolingC, R410A_SUBCOOLING_TARGET, false)}
+            />
+          )}
+        </div>
+      )}
+
       <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
         <dt className="text-slate-600 dark:text-slate-400">Evaporazione teorica</dt>
         <dd className="text-right font-medium">{formatC(result.evaporationTempC)}</dd>
 
         <dt className="text-slate-600 dark:text-slate-400">Superheat</dt>
-        <dd className="text-right text-lg font-semibold">{formatC(result.superheatC)}</dd>
+        <dd className="text-right font-medium">{formatC(result.superheatC)}</dd>
 
         {result.condensationTempC !== undefined && (
           <>
@@ -27,7 +54,7 @@ function ResultsPanel({ result }: { result: DiagnosticsResult }) {
         {result.subcoolingC !== undefined && (
           <>
             <dt className="text-slate-600 dark:text-slate-400">Subcooling</dt>
-            <dd className="text-right text-lg font-semibold">{formatC(result.subcoolingC)}</dd>
+            <dd className="text-right font-medium">{formatC(result.subcoolingC)}</dd>
           </>
         )}
         {result.airDeltaTC !== undefined && (

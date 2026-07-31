@@ -1,4 +1,12 @@
 import type { PtCurve } from '../lib/pt-curve'
+import type { TargetRange } from '../lib/charge-verdict'
+
+/**
+ * Range target indicativi per impianti split residenziali (ANALYSIS.md §8),
+ * da validare/raffinare con l'uso reale sul campo — non normativi.
+ */
+export const R410A_SUPERHEAT_TARGET: TargetRange = { minC: 5, maxC: 10 }
+export const R410A_SUBCOOLING_TARGET: TargetRange = { minC: 8, maxC: 12 }
 
 /**
  * Curva di saturazione R410A, pressione gauge (bar relativi, non assoluti).

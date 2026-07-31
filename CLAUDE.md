@@ -23,7 +23,7 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 - [x] 2. Modulo dati curva di saturazione P/T per R410A — fatto: `src/lib/pt-curve.ts` (interpolazione generica, gauge) + `src/data/r410a.ts` (tabella da `docs/tabella_pt_gas.html`) + test in `src/lib/pt-curve.test.ts` (`npm run test`), validati sul caso 7,5 bar → ~2°C.
 - [x] 3. Form di input dati misurazione — fatto: `src/components/MeasurementForm.tsx`, campi raggruppati per obbligatorietà, conversione unità in `src/lib/units.ts`.
 - [x] 4. Logica di calcolo: superheat, subcooling, controlli di coerenza — fatto: `src/lib/diagnostics.ts` + test in `src/lib/diagnostics.test.ts`, collegato al form in `App.tsx`.
-- [ ] 5. Componente gauge SVG (lancetta su arco con zone verde/giallo/rosso) — vedi ANALYSIS.md §4.4 per la logica delle zone
+- [x] 5. Componente gauge SVG — fatto: `src/lib/charge-verdict.ts` (giudizio zone + range target in `src/data/r410a.ts`) + `src/components/Gauge.tsx`, due gauge affiancati (superheat/subcooling) in `App.tsx` come da ANALYSIS.md §4.4.
 - [ ] 6. Storico misurazioni con IndexedDB (salvataggio locale, nessun account) — ANALYSIS.md §4.5
 - [ ] 7. Modalità guidata "step-by-step ricarica" con timer di stabilizzazione — ANALYSIS.md §4.6
 - [ ] 8. Rifinitura: manifest PWA completo, test installabilità, test offline, dark mode, touch target grandi
