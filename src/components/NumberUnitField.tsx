@@ -4,6 +4,8 @@ interface NumberUnitFieldProps<TUnit extends string> {
   help?: string
   required?: boolean
   units: readonly TUnit[]
+  /** Etichetta da mostrare per ogni unità, se diversa dal valore interno (es. 'C' -> '°C'). */
+  unitLabels?: Partial<Record<TUnit, string>>
   value: string
   unit: TUnit
   onValueChange: (value: string) => void
@@ -17,6 +19,7 @@ export function NumberUnitField<TUnit extends string>({
   help,
   required,
   units,
+  unitLabels,
   value,
   unit,
   onValueChange,
@@ -48,7 +51,7 @@ export function NumberUnitField<TUnit extends string>({
         >
           {units.map((u) => (
             <option key={u} value={u}>
-              {u}
+              {unitLabels?.[u] ?? u}
             </option>
           ))}
         </select>
