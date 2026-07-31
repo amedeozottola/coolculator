@@ -1,4 +1,5 @@
 import type { PressureUnit, TemperatureUnit } from '../lib/units'
+import type { RefrigerantId } from '../data/refrigerants'
 
 export interface PressureField {
   value: number
@@ -10,13 +11,8 @@ export interface TemperatureField {
   unit: TemperatureUnit
 }
 
-/**
- * Dati grezzi inseriti dall'utente nel form. Un solo refrigerante in v1,
- * ma il campo resta un'unione così aggiungerne altri non richiede di
- * riscrivere i tipi a valle (vedi ANALYSIS.md §3).
- */
 export interface MeasurementInput {
-  refrigerant: 'R410A'
+  refrigerant: RefrigerantId
 
   // Obbligatori: bastano per il superheat.
   lowPressure: PressureField

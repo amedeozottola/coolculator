@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { PressureUnit, TemperatureUnit } from '../lib/units'
 import type { MeasurementInput, PressureField, TemperatureField } from '../types/measurement'
+import { REFRIGERANT_IDS, REFRIGERANTS, type RefrigerantId } from '../data/refrigerants'
 import { NumberUnitField } from './NumberUnitField'
 
 const PRESSURE_UNITS: readonly PressureUnit[] = ['bar', 'MPa', 'psi']
@@ -13,6 +14,7 @@ interface RawField<TUnit> {
 }
 
 interface FormState {
+  refrigerant: RefrigerantId
   lowPressure: RawField<PressureUnit>
   gasLineTemp: RawField<TemperatureUnit>
   highPressure: RawField<PressureUnit>
@@ -24,6 +26,7 @@ interface FormState {
 }
 
 const INITIAL_STATE: FormState = {
+  refrigerant: 'R410A',
   lowPressure: { value: '', unit: 'bar' },
   gasLineTemp: { value: '', unit: 'C' },
   highPressure: { value: '', unit: 'bar' },
@@ -51,7 +54,10 @@ export interface MeasurementFormProps {
 export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE)
 
-  function updateField<K extends keyof FormState>(key: K, patch: Partial<FormState[K]>) {
+  function updateField<K extends Exclude<keyof FormState, 'refrigerant'>>(
+    key: K,
+    patch: Partial<FormState[K]>,
+  ) {
     setForm((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }))
   }
 
@@ -63,7 +69,7 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
     if (!lowPressure || !gasLineTemp) return // i campi required nativi impediscono già questo caso
 
     onSubmit({
-      refrigerant: 'R410A',
+      refrigerant: form.refrigerant,
       lowPressure,
       gasLineTemp,
       highPressure: toPressureField(form.highPressure),
@@ -85,6 +91,25 @@ export function MeasurementForm({ onSubmit }: MeasurementFormProps) {
           Misura entrambi i valori all'unità esterna, sulla valvola di servizio della linea del
           gas — stesso punto dove leggi la pressione.
         </p>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="refrigerant" className="text-base font-medium text-slate-900 dark:text-slate-100">
+            Refrigerante
+          </label>
+          <select
+            id="refrigerant"
+            value={form.refrigerant}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, refrigerant: e.target.value as RefrigerantId }))
+            }
+            className="rounded-lg border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+          >
+            {REFRIGERANT_IDS.map((id) => (
+              <option key={id} value={id}>
+                {REFRIGERANTS[id].label}
+              </option>
+            ))}
+          </select>
+        </div>
         <NumberUnitField
           id="lowPressure"
           label="Pressione bassa (linea gas)"
