@@ -14,7 +14,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['icons/icon.svg', 'icons/favicon.ico', 'icons/apple-touch-icon-180x180.png'],
       manifest: {
         id: base,

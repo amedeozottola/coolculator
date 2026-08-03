@@ -11,6 +11,7 @@ import {
 } from './lib/charge-estimate'
 import { TemperatureOutOfRangeError } from './lib/pt-curve'
 import { REFRIGERANTS } from './data/refrigerants'
+import { UpdatePrompt } from './components/UpdatePrompt'
 import type { MeasurementInput } from './types/measurement'
 
 function formatC(value: number | undefined): string {
@@ -151,6 +152,8 @@ function App() {
       <MeasurementForm onSubmit={handleSubmit} />
 
       {result && <ResultsPanel result={result} />}
+
+      <UpdatePrompt />
     </main>
   )
 }
