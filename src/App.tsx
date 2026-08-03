@@ -147,6 +147,7 @@ function App() {
           className="h-16 w-16"
         />
         <h1 className="text-2xl font-semibold">Coolculator</h1>
+        <p className="text-xs text-slate-500 dark:text-slate-400">v{__APP_VERSION__}</p>
       </div>
 
       <MeasurementForm onSubmit={handleSubmit} />

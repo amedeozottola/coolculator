@@ -26,6 +26,18 @@ function valueToAngle(valueC: number, min: number, max: number): number {
   return 180 - fraction * 180
 }
 
+/**
+ * Come un manometro tradizionale: sinistra = carica insufficiente, centro =
+ * corretta, destra = carica eccessiva — sempre, indipendentemente dal fatto
+ * che il valore grezzo della metrica cresca o diminuisca con la carica
+ * (per il superheat un valore ALTO è insufficiente, per il subcooling è
+ * un valore BASSO: senza questo "mirroring" i due gauge finirebbero
+ * orientati in modo opposto tra loro e controintuitivo).
+ */
+function toChargeAxisC(valueC: number, min: number, max: number, highMeansUndercharged: boolean): number {
+  return highMeansUndercharged ? min + max - valueC : valueC
+}
+
 function arcPath(fromAngle: number, toAngle: number, radius: number): string {
   const start = polarPoint(fromAngle, radius)
   const end = polarPoint(toAngle, radius)
@@ -61,26 +73,27 @@ export function Gauge({
 }: GaugeProps) {
   const { gaugeMinC, gaugeMaxC } = judgment
   const boundaries = zoneBoundaries(target, highMeansUndercharged)
-  const needleAngle = valueToAngle(valueC, gaugeMinC, gaugeMaxC)
+  const toAxis = (c: number) => toChargeAxisC(c, gaugeMinC, gaugeMaxC, highMeansUndercharged)
+  const needleAngle = valueToAngle(toAxis(valueC), gaugeMinC, gaugeMaxC)
   const needleTip = polarPoint(needleAngle, RADIUS - STROKE_WIDTH / 2 - 4)
 
   return (
     <div className="flex w-full max-w-xs flex-col items-center gap-1">
       <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">{label}</h3>
       <svg viewBox="0 0 200 110" className="w-full" role="img" aria-label={`${label}: ${judgment.label}`}>
-        {boundaries.map((b) => (
-          <path
-            key={`${b.zone}-${b.fromC}`}
-            d={arcPath(
-              valueToAngle(b.fromC, gaugeMinC, gaugeMaxC),
-              valueToAngle(b.toC, gaugeMinC, gaugeMaxC),
-              RADIUS,
-            )}
-            stroke={ZONE_COLORS[b.zone]}
-            strokeWidth={STROKE_WIDTH}
-            fill="none"
-          />
-        ))}
+        {boundaries.map((b) => {
+          const angleFrom = valueToAngle(toAxis(b.fromC), gaugeMinC, gaugeMaxC)
+          const angleTo = valueToAngle(toAxis(b.toC), gaugeMinC, gaugeMaxC)
+          return (
+            <path
+              key={`${b.zone}-${b.fromC}`}
+              d={arcPath(Math.max(angleFrom, angleTo), Math.min(angleFrom, angleTo), RADIUS)}
+              stroke={ZONE_COLORS[b.zone]}
+              strokeWidth={STROKE_WIDTH}
+              fill="none"
+            />
+          )
+        })}
         <line
           x1={CENTER_X}
           y1={CENTER_Y}
