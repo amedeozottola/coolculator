@@ -27,7 +27,9 @@ Questo file è il punto di ingresso per lo sviluppo. Prima di scrivere codice, l
 - [x] 5b. Stima grammi da aggiungere/togliere + target di pressione (ANALYSIS.md §4.2) — fatto: `src/lib/charge-estimate.ts`, mostrato nel gauge solo quando la zona non è "correct". Fattore g/°C dichiarato placeholder/non validato, da tarare con l'uso reale.
 - [ ] ~~6. Storico misurazioni con IndexedDB~~ — RIMANDATO (luglio 2026): verrà fatto insieme all'anagrafica impianti quando l'app avrà un backend, vedi ANALYSIS.md §4.5.
 - [ ] 7. Modalità guidata "step-by-step ricarica" con timer di stabilizzazione — ANALYSIS.md §4.6
-- [ ] 8. Rifinitura: manifest PWA completo, test installabilità, test offline, dark mode, touch target grandi
+- [x] 8a. Installabilità Android/Chrome desktop + prompt di aggiornamento — fatto: manifest già completo (192/512/maskable), `registerType: 'prompt'` in `vite.config.ts` + `src/components/UpdatePrompt.tsx` (banner "nuova versione disponibile" invece di aggiornare in silenzio). Verificato in browser (Playwright): installabilità (manifest+SW), flusso di aggiornamento end-to-end, funzionamento offline completo. iOS Safari esplicitamente fuori scope (niente splash screen custom).
+- [ ] 8b. APK per Play Store — valutato fattibile (TWA via Bubblewrap, automatizzabile in CI), non implementato: bassa priorità per l'utente al momento.
+- [ ] 8c. Altre rifiniture: touch target grandi, test dark mode approfonditi.
 
 ## Cosa NON fare nella v1
 
