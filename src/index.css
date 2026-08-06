@@ -4,10 +4,23 @@
   color-scheme: light dark;
 }
 
+/* Safety net contro overflow orizzontale su mobile: applicato sia a html che
+   a body perché a seconda del browser il "root scroller" può essere l'uno o
+   l'altro. width/max-width espliciti al 100% evitano che il documento possa
+   mai essere più largo del viewport, qualunque sia la causa a monte. */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
-  /* Safety net contro overflow orizzontale: su alcuni browser mobili i controlli
-     nativi (select, input number) possono avere una larghezza intrinseca diversa
-     da quella calcolata su desktop, causando scroll orizzontale indesiderato. */
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
 }
