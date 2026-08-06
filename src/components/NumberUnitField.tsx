@@ -32,7 +32,10 @@ export function NumberUnitField<TUnit extends string>({
         {required && <span className="text-orange-600 dark:text-orange-400"> *</span>}
       </label>
       {help && <p className="text-sm text-slate-600 dark:text-slate-400">{help}</p>}
-      <div className="flex min-w-0 gap-2">
+      {/* flex-wrap: se per qualsiasi motivo (rendering nativo del browser, impostazioni
+          del dispositivo) i due campi non ci stanno affiancati sulla riga, il selettore
+          va a capo sotto invece di sforare orizzontalmente la pagina. */}
+      <div className="flex min-w-0 flex-wrap gap-2">
         <input
           id={id}
           type="number"
@@ -45,13 +48,13 @@ export function NumberUnitField<TUnit extends string>({
           // pagina. Togliere il focus allo scroll fa sì che lo scroll muova solo la pagina.
           onWheel={(e) => e.currentTarget.blur()}
           required={required}
-          className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+          className="min-w-[8rem] max-w-full flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         />
         <select
           value={unit}
           onChange={(e) => onUnitChange(e.target.value as TUnit)}
           aria-label={`Unità di misura per ${label}`}
-          className="w-20 shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+          className="max-w-full shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         >
           {units.map((u) => (
             <option key={u} value={u}>

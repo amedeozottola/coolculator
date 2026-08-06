@@ -104,8 +104,8 @@ export function MeasurementFlow() {
   const subcoolingGauge = result ? subcoolingGaugeProps(result) : null
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-6">
-      <fieldset className="flex flex-col gap-4">
+    <div className="flex w-full max-w-md min-w-0 flex-col gap-6 overflow-x-hidden">
+      <fieldset className="flex min-w-0 flex-col gap-4">
         <legend className="mb-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
           1. Dati obbligatori
         </legend>
@@ -166,7 +166,7 @@ export function MeasurementFlow() {
       )}
 
       {liquidLineOpen ? (
-        <fieldset className="flex flex-col gap-4">
+        <fieldset className="flex min-w-0 flex-col gap-4">
           <legend className="mb-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
             2. Linea liquido (per il subcooling)
           </legend>
@@ -212,7 +212,7 @@ export function MeasurementFlow() {
       )}
 
       {coherenceOpen ? (
-        <fieldset className="flex flex-col gap-4">
+        <fieldset className="flex min-w-0 flex-col gap-4">
           <legend className="mb-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
             3. Controlli di coerenza
           </legend>
