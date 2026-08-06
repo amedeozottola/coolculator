@@ -6,4 +6,8 @@
 
 body {
   margin: 0;
+  /* Safety net contro overflow orizzontale: su alcuni browser mobili i controlli
+     nativi (select, input number) possono avere una larghezza intrinseca diversa
+     da quella calcolata su desktop, causando scroll orizzontale indesiderato. */
+  overflow-x: hidden;
 }

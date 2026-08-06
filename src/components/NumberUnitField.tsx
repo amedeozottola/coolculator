@@ -26,13 +26,13 @@ export function NumberUnitField<TUnit extends string>({
   onUnitChange,
 }: NumberUnitFieldProps<TUnit>) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex min-w-0 flex-col gap-1">
       <label htmlFor={id} className="text-base font-medium text-slate-900 dark:text-slate-100">
         {label}
         {required && <span className="text-orange-600 dark:text-orange-400"> *</span>}
       </label>
       {help && <p className="text-sm text-slate-600 dark:text-slate-400">{help}</p>}
-      <div className="flex gap-2">
+      <div className="flex min-w-0 gap-2">
         <input
           id={id}
           type="number"
@@ -51,7 +51,7 @@ export function NumberUnitField<TUnit extends string>({
           value={unit}
           onChange={(e) => onUnitChange(e.target.value as TUnit)}
           aria-label={`Unità di misura per ${label}`}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+          className="w-20 shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-3 text-lg text-slate-900 focus:border-sky-600 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         >
           {units.map((u) => (
             <option key={u} value={u}>
